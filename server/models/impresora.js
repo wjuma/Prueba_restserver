@@ -5,14 +5,14 @@ let Schema = mongoose.Schema;
 let impresoraSchema = new Schema({
     marca: { type: String, required: [true, "La marca es requerida"] },
     modelo: { type: String, required: [true, "El modelo es necesario"] },
-    numserie: {
+    serie: {
         type: Number,
         required: [true, "El # de serie es necesario"],
         unique: true,
     },
-    b_n: { type: Boolean, default: false },
-    ip: { type: String, required: [true, "El nombre es necesario"] },
-    numcont: { type: Number, required: false, default: 0 },
+    color: { type: Boolean, default: false },
+    ip: { type: String, required: [true, "El ip es necesario"] },
+    contadort: { type: Number, required: false, default: 0 },
     precio: { type: Number, required: [true, "El precio es necesario"] },
 });
 impresoraSchema.plugin(uniqueValidator, {

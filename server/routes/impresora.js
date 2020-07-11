@@ -8,12 +8,7 @@ app.get("/", (req, res) => {
 });
 app.get("/impresora", (req, res) => {
     let id = req.params.id;
-    let desde = req.query.desde || 0;
-    desde = Number(desde);
-    let limite = req.query.limite || 3;
-    limite = Number(limite);
-
-    Impresora.find({}, ["marca", "modelo", "numserie", "b_n", "ip", "precio"])
+    Impresora.find({}, ["marca", "modelo", "serie", "color", "ip", "precio"])
         // .skip(1)
         // .limit(3)
         .exec((err, impresoras) => {
@@ -32,7 +27,7 @@ app.get("/impresora", (req, res) => {
             //});
         });
 });
-// Impresora.findById(id, body, (err, usuarioDBr) {
+// Impresora.findById(id, body, (err, usuarioDB) {
 //     if (err) {
 //         return res.status(400).json({
 //             ok: false,
@@ -44,6 +39,27 @@ app.get("/impresora", (req, res) => {
 //         usuario: usuarioDB,
 //     });
 // });
+app.get("/impresora/:id", (req, res) => {
+    let id = req.params.id;
+    Impresora.findById(
+        id, ["marca", "modelo", "serie", "color", "ip", "precio"],
+        (err, usuarioDB) => {
+            if (!usuarioDB) {
+                return res.status(400).json({
+                    ok: false,
+                    error: {
+                        message: `No existe el id = ${id} buscado`,
+                    },
+                });
+            }
+
+            res.json({
+                ok: true,
+                usuario: usuarioDB,
+            });
+        }
+    );
+});
 
 //peticiones post
 app.post("/impresora", (req, res) => {
@@ -51,9 +67,9 @@ app.post("/impresora", (req, res) => {
     let impresora = new Impresora({
         marca: body.marca,
         modelo: body.modelo,
-        numserie: body.numserie,
-        b_n: body.b_n,
-        numcont: body.numcont,
+        serie: body.serie,
+        color: body.color,
+        contador: body.contador,
         ip: body.ip,
         precio: body.precio,
     });
@@ -75,7 +91,7 @@ app.post("/impresora", (req, res) => {
 //No actualizar serie, contador y marca/Completado
 app.put("/impresora/:id", (req, res) => {
     let id = req.params.id;
-    let body = _.pick(req.body, ["modelo", "b_n", "ip", "precio"]);
+    let body = _.pick(req.body, ["modelo", "color", "ip", "precio"]);
 
     Impresora.findByIdAndUpdate(id, body, { new: true }, (err, usuarioDB) => {
         if (err) {
