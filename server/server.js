@@ -11,10 +11,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //Conexion base de datos
 app.use(require("./routes/impresora"));
-mongoose.connect("mongodb://localhost:27017/impresora", (err, res) => {
-    if (err) throw err;
-    console.log("base");
-});
+mongoose.connect(
+    //process.env.URLDB, { useNewUrlParser: true, useCreateIndex: true },
+    process.env.URLDB, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true },
+    (err, res) => {
+        if (err) throw err;
+        console.log("Base");
+    }
+);
 
 app.listen(process.env.PORT, () => {
     console.log(`Escuchando en el puerto ${process.env.PORT}`);
